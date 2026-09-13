@@ -763,7 +763,7 @@ class SimplePerceptron:
         '''
         n_samples, n_features = X.shape
     
-        self.weights = np.random.normal(size=n_features)
+        self.weights = self.prng.normal(size=n_features)
         self.bias = 0
 
         # Training loop - implement the perceptron learning algorithm
@@ -774,14 +774,12 @@ class SimplePerceptron:
             for i in range(n_samples):
                 # DONE: Compute the linear combination (net input)
                 linear_output = self.weights@X[i] + self.bias
-                print(linear_output)
                 # Apply step function to get prediction
                 prediction = self._activation_function(linear_output)
 
                 # DONE: Calculate the error and update rule
-                error = (prediction - y[i])
-                print(prediction)
-                print(y[i])
+                error = ( y[i]- prediction)
+
                 # Only update weights if there's an error (classic perceptron rule)
                 if error != 0:
                     errors += 1
