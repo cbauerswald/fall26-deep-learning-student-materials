@@ -185,7 +185,7 @@ def linreg_gd(
     t_start = time()
     # TODO: GD implementation
 
-    for i in range(1,n_iters):
+    for i in range(n_iters):
         error = Xaug @ W - Y
         W = W - lr*2*Xaug.T@error/n
         Ws[i] = W
@@ -442,9 +442,7 @@ def run_sgd_improved_analysis(
     w = start_point.copy()
 
     # TODO: simulate noise_scale based on batch size
-    noise_scale = None
-    raise NotImplementedError
-
+    noise_scale = initial_noise/np.sqrt(batch_size)
     converged = False
     t_start = time()
     # shift range by 1 for 1-based counting of total iterations
@@ -528,13 +526,12 @@ def plot_heatmaps(
     n_trials = losses.shape[-1]
     # TODO: Collect metrics over n_trials
     # resulting ndarrays will have shape (LR, B, NS)
-    raise NotImplementedError
-    losses_mean = None
-    losses_best = None
-    runtimes_mean = None
-    escaped_prob = None
-    conv_iters_mean = None
-    conv_iters_best = None
+    losses_mean = losses.mean(axis=-1)
+    losses_best = losses.min(axis=-1)
+    runtimes_mean = runtimes.mean(axis=-1)
+    escaped_prob = escaped.mean(axis=-1)
+    conv_iters_mean = conv_iters.mean(axis=-1)
+    conv_iters_best = conv_iters.min(axis=-1)
 
     learning_rates_xticks = [str(x) for x in learning_rates]
     batch_sizes_yticks = [str(y) for y in batch_sizes]
@@ -666,8 +663,13 @@ def multi_modal_loss(w: ndarray) -> float:
     Returns:
         L: total loss
     '''
-    # TODO
-    raise NotImplementedError
+    l1 = -2 * np.exp(-np.sum((w-np.array([1.5,1.5]))**2)/.2)
+    l2 = -1 * np.exp(-np.sum((w-np.array([1.5,-1.5]))**2)/.2)
+    l3 = -2 * np.exp(-np.sum((w-np.array([2.0,-2.0]))**2)/.2)
+    lg = -3.5 * np.exp(-np.sum((w-np.array([-1.5,-1.5]))**2)/1.5)
+    ls = 0.9 * (w[0]**2 - w[1]**2) * np.exp(-np.sum(w**2)/0.6)
+    L = lg + ls + l1 + l2 + l3
+    return L
 
 
 def multi_modal_grad_components(w: ndarray) -> tuple[ndarray, ndarray]:
@@ -683,8 +685,27 @@ def multi_modal_grad_components(w: ndarray) -> tuple[ndarray, ndarray]:
         grad_local: ndarray of shape (2,) of floats for local grad
         grad_global: ndarray of shape (2,) of floats for global grad
     '''
-    # TODO
-    raise NotImplementedError
+
+    center1 = np.array([1.5,1.5])
+    center2 = np.array([1.5,-1.5])
+    center3 = np.array([2.0,-2.0])
+    centerg = np.array([-1.5,-1.5])
+
+    l1 = -2. * np.exp(-np.sum((w-center1)**2)/.2)
+    l2 = -1. * np.exp(-np.sum((w-center2)**2)/.2)
+    l3 = -2. * np.exp(-np.sum((w-center3)**2)/.2)
+    lg = -3.5 * np.exp(-np.sum((w-centerg)**2)/1.5)
+
+
+    grad1 = l1 * (-2.) * (w-center1) / 0.2
+    grad2 = l2 * (-2.) * (w-center2) / 0.2
+    grad3 = l3 * (-2.) * (w-center3) / 0.2
+    gradg = lg * (-2.) * (w-centerg) / 1.5
+    grads = 0.9 * np.array([2*w[0], -2*w[1]]) * np.exp(-np.sum(w**2)/0.6) + 0.9 * (w[0]**2 - w[1]**2) * np.exp(-np.sum(w**2)/0.6) * (-2*w/0.6)
+
+    return grad1+grad2+grad3+grads, gradg
+
+
 
 
 ############     Problem 4    ############
