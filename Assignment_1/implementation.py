@@ -20,7 +20,8 @@ def sigmoid(z: ndarray) -> ndarray:
     '''
     assert z.ndim == 1, 'z must have shape (n,)'
     # TODO
-    raise NotImplementedError
+    exp_z = np.exp(-z)
+    return 1/(1 + exp_z)
 
 
 def softmax(Z: ndarray) -> ndarray:
@@ -34,7 +35,8 @@ def softmax(Z: ndarray) -> ndarray:
     '''
     assert Z.ndim == 2, 'Z must have shape (n, k)'
     # TODO
-    raise NotImplementedError
+    exp_Z = np.exp(Z - np.max(Z, axis=1, keepdims=True))
+    return exp_Z / np.sum(exp_Z, axis=1, keepdims=True)
 
 
 def nll_binary(X: ndarray, w: ndarray, y: ndarray) -> float:
@@ -60,7 +62,7 @@ def nll_binary(X: ndarray, w: ndarray, y: ndarray) -> float:
     # Xaug[:, 0] is vector of 1s
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
     # TODO
-    raise NotImplementedError
+    return -np.sum(y * np.log(sigmoid(Xaug @ w)) + (1 - y) * np.log(1 - sigmoid(Xaug @ w)))
 
 
 def nll_multiclass(X: ndarray, W: ndarray, Y_onehot: ndarray) -> float:
@@ -87,7 +89,9 @@ def nll_multiclass(X: ndarray, W: ndarray, Y_onehot: ndarray) -> float:
     # Xaug[:, 0] is vector of 1s
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
     # TODO
-    raise NotImplementedError
+    p = softmax(Xaug @ W)
+    print("p shape:", p.shape)
+    return -np.sum(Y_onehot * np.log(p), axis=1)
 
 
 ############     Problem 2    ############
