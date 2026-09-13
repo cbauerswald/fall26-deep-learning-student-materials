@@ -773,7 +773,7 @@ class SimplePerceptron:
 
             for i in range(n_samples):
                 # DONE: Compute the linear combination (net input)
-                linear_output = self.weights*X[i] + self.bias
+                linear_output = self.weights@X[i] + self.bias
                 print(linear_output)
                 # Apply step function to get prediction
                 prediction = self._activation_function(linear_output)
@@ -890,7 +890,7 @@ def create_nonlinear_features(X: ndarray) -> ndarray:
         X_enhanced: Augmented XOR dataset of shape (n, d+1)
     '''
     # DONE
-    X_enhanced = np.concatenate( (X, X[1]*X[2]), axis=1)
+    X_enhanced = np.concatenate( (X, (X[1]*X[2]).T), axis=1)
     return X_enhanced
 
 
