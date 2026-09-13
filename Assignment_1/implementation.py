@@ -62,7 +62,7 @@ def nll_binary(X: ndarray, w: ndarray, y: ndarray) -> float:
     # Xaug[:, 0] is vector of 1s
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
     # TODO
-    return -np.sum(y * np.log(sigmoid(Xaug @ w)) + (1 - y) * np.log(1 - sigmoid(Xaug @ w)))
+    return -np.sum(y * np.log(sigmoid(Xaug @ w)) + (1 - y) * np.log(1 - sigmoid(Xaug @ w)))/n
 
 
 def nll_multiclass(X: ndarray, W: ndarray, Y_onehot: ndarray) -> float:
@@ -89,9 +89,10 @@ def nll_multiclass(X: ndarray, W: ndarray, Y_onehot: ndarray) -> float:
     # Xaug[:, 0] is vector of 1s
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
     # TODO
+    print(n,d, k)
     p = softmax(Xaug @ W)
     print("p shape:", p.shape)
-    return -np.sum(Y_onehot * np.log(p), axis=1)
+    return -np.sum(Y_onehot * np.log(p))/n
 
 
 ############     Problem 2    ############
@@ -130,9 +131,15 @@ def linreg_ne(
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
     t_start = time()
     # TODO: NE implementation
+    
+    
+    if lmbda is None:
+        a =  Xaug.T@Xaug 
+    else:
+        a = Xaug.T@Xaug + lmbda*np.eye(d+1)
+    ws = np.linalg.solve(a, Xaug.T@Y)
     t_end = time()
-    # return ?, t_end - t_start
-    raise NotImplementedError
+    return ws, t_end - t_start
 
 
 def linreg_gd(
@@ -177,9 +184,15 @@ def linreg_gd(
     W = np.zeros((d+1, m))
     t_start = time()
     # TODO: GD implementation
+
+    for i in range(1,n_iters):
+        error = Xaug @ W - Y
+        W = W - lr*2*Xaug.T@error/n
+        Ws[i] = W
+
+    
     t_end = time()
-    # return ?,  t_end - t_start
-    raise NotImplementedError
+    return Ws,  t_end - t_start
 
 
 def MSE(Y: ndarray, Yhat: ndarray) -> float:
@@ -195,8 +208,7 @@ def MSE(Y: ndarray, Yhat: ndarray) -> float:
     assert Y.ndim == 2, 'Y must have shape (n, m)'
     assert Y.shape == Yhat.shape, 'Y and Yhave must have same shape'
 
-    # TODO
-    raise NotImplementedError
+    return np.mean((Y-Yhat)**2)
 
 
 def plot_runtime_v_feature_dim(
@@ -226,7 +238,8 @@ def plot_runtime_v_feature_dim(
     ax.set_ylabel('Runtime (seconds)')
     ax.grid(visible=True, alpha=0.3)
     # TODO: plot ds v runtimes_ne and ds v runtimes_gd
-    raise NotImplementedError
+    ax.plot(ds, runtimes_ne, label="NE")
+    ax.plot(ds, runtimes_gd, label="GD")
     ax.legend(loc='upper left')
     fig.tight_layout()
     print(f'Saving {plotname}.png')
@@ -290,12 +303,11 @@ def plot_gd_iters_v_mse(
             ax = axs[*divmod(i, ncols)]
             ax.set_title(rf'$d = {d}$')
             ax.grid(visible=True, alpha=0.3)
-            # TODO: plot NE optimal loss and GD iterations v mse
-            raise NotImplementedError
-            mses_ne_ridge_i = None
-            mses_gd_i = None
+            # TODO: plot NE optimal loss and GD iterations v mse[.
+            mses_ne_ridge_i = mses_ne_ridge[i]
+            mses_gd_i =mses_gd[i]
             if j == 0:  # if fullscale
-                mses_ne_i = None
+                mses_ne_i = mses_ne[i]
                 ax.axhline(mses_ne_i, linestyle='-.', c='tab:green', label='NE')
             ax.axhline(mses_ne_ridge_i, linestyle='-.', c='tab:orange', label='NE Ridge')
             ax.plot(mses_gd_i, c='tab:blue', label='GD')
