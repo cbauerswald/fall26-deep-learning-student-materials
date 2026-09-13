@@ -778,7 +778,7 @@ class SimplePerceptron:
                 # Apply step function to get prediction
                 prediction = self._activation_function(linear_output)
 
-                # TODO: Calculate the error and update rule
+                # DONE: Calculate the error and update rule
                 error = (prediction - y[i])
                 print(prediction)
                 print(y[i])
@@ -786,7 +786,7 @@ class SimplePerceptron:
                 if error != 0:
                     errors += 1
 
-                    # TODO: Apply perceptron update rule
+                    # DONE: Apply perceptron update rule
                     self.weights += self.learning_rate*error*X[i]
                     self.bias += self.learning_rate*error
 
@@ -816,7 +816,7 @@ class SimplePerceptron:
         Returns:
             y: ndarray of predicted labels of shape (n,)
         '''
-        # TODO
+        # DONE
         return self._activation_function(X@self.weights.T+self.bias)
 
     def get_decision_boundary_params(self) -> dict[str, Any] | None:
@@ -890,7 +890,8 @@ def create_nonlinear_features(X: ndarray) -> ndarray:
         X_enhanced: Augmented XOR dataset of shape (n, d+1)
     '''
     # DONE
-    X_enhanced = np.concatenate( (X, (X[1]*X[2]).T), axis=1)
+    prod = X[:,0]*X[:,1]
+    X_enhanced = np.concatenate( (X, prod.reshape(-1,1)), axis=1)
     return X_enhanced
 
 
