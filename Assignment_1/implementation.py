@@ -19,7 +19,7 @@ def sigmoid(z: ndarray) -> ndarray:
         p: sigmoid(z) with shape (n,). Each p[i] is the sigmoid of z[i].
     '''
     assert z.ndim == 1, 'z must have shape (n,)'
-    # TODO
+    # DONE
     exp_z = np.exp(-z)
     return 1/(1 + exp_z)
 
@@ -34,7 +34,7 @@ def softmax(Z: ndarray) -> ndarray:
         P: softmax(Z) with shape (n, k)
     '''
     assert Z.ndim == 2, 'Z must have shape (n, k)'
-    # TODO
+    # DONE
     exp_Z = np.exp(Z - np.max(Z, axis=1, keepdims=True))
     return exp_Z / np.sum(exp_Z, axis=1, keepdims=True)
 
@@ -61,7 +61,7 @@ def nll_binary(X: ndarray, w: ndarray, y: ndarray) -> float:
 
     # Xaug[:, 0] is vector of 1s
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
-    # TODO
+    # DONE
     return -np.sum(y * np.log(sigmoid(Xaug @ w)) + (1 - y) * np.log(1 - sigmoid(Xaug @ w)))/n
 
 
@@ -88,10 +88,8 @@ def nll_multiclass(X: ndarray, W: ndarray, Y_onehot: ndarray) -> float:
 
     # Xaug[:, 0] is vector of 1s
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
-    # TODO
-    print(n,d, k)
+    # DONE
     p = softmax(Xaug @ W)
-    print("p shape:", p.shape)
     return -np.sum(Y_onehot * np.log(p))/n
 
 
@@ -130,7 +128,7 @@ def linreg_ne(
     # Xaug[:, 0] is vector of 1s
     Xaug = np.concatenate((np.ones((n, 1)), X), axis=1)
     t_start = time()
-    # TODO: NE implementation
+    # DONE: NE implementation
     
     
     if lmbda is None:
@@ -183,7 +181,7 @@ def linreg_gd(
     Ws = np.zeros((n_iters, d+1, m))  # fixed init for reproducability
     W = np.zeros((d+1, m))
     t_start = time()
-    # TODO: GD implementation
+    # DONE: GD implementation
 
     for i in range(n_iters):
         error = Xaug @ W - Y
@@ -237,7 +235,7 @@ def plot_runtime_v_feature_dim(
     ax.set_xlabel('Num. Features')
     ax.set_ylabel('Runtime (seconds)')
     ax.grid(visible=True, alpha=0.3)
-    # TODO: plot ds v runtimes_ne and ds v runtimes_gd
+    # DONE: plot ds v runtimes_ne and ds v runtimes_gd
     ax.plot(ds, runtimes_ne, label="NE")
     ax.plot(ds, runtimes_gd, label="GD")
     ax.legend(loc='upper left')
@@ -303,7 +301,7 @@ def plot_gd_iters_v_mse(
             ax = axs[*divmod(i, ncols)]
             ax.set_title(rf'$d = {d}$')
             ax.grid(visible=True, alpha=0.3)
-            # TODO: plot NE optimal loss and GD iterations v mse[.
+            # DONE: plot NE optimal loss and GD iterations v mse[.
             mses_ne_ridge_i = mses_ne_ridge[i]
             mses_gd_i =mses_gd[i]
             if j == 0:  # if fullscale
@@ -441,7 +439,7 @@ def run_sgd_improved_analysis(
     '''
     w = start_point.copy()
 
-    # TODO: simulate noise_scale based on batch size
+    # DONE: simulate noise_scale based on batch size
     noise_scale = initial_noise/np.sqrt(batch_size)
     converged = False
     t_start = time()
@@ -524,7 +522,7 @@ def plot_heatmaps(
         escaped: ndarray of shape (LR, B, NS, n_trials) of bools
     '''
     n_trials = losses.shape[-1]
-    # TODO: Collect metrics over n_trials
+    # DONE: Collect metrics over n_trials
     # resulting ndarrays will have shape (LR, B, NS)
     losses_mean = losses.mean(axis=-1)
     losses_best = losses.min(axis=-1)
@@ -764,11 +762,9 @@ class SimplePerceptron:
             y: training labels. ndarray of shape (n,)
         '''
         n_samples, n_features = X.shape
-        raise NotImplementedError
-
-        # TODO: Initialize weights from a standard normal distribution and bias to zero
-        self.weights = None
-        self.bias = None
+    
+        self.weights = np.random.normal(size=n_features)
+        self.bias = 0
 
         # Training loop - implement the perceptron learning algorithm
         for epoch in range(self.max_epochs):
@@ -776,22 +772,23 @@ class SimplePerceptron:
             errors = 0
 
             for i in range(n_samples):
-                # TODO: Compute the linear combination (net input)
-                linear_output = None
-
+                # DONE: Compute the linear combination (net input)
+                linear_output = self.weights*X[i] + self.bias
+                print(linear_output)
                 # Apply step function to get prediction
                 prediction = self._activation_function(linear_output)
 
                 # TODO: Calculate the error and update rule
-                error = None
-
+                error = (prediction - y[i])
+                print(prediction)
+                print(y[i])
                 # Only update weights if there's an error (classic perceptron rule)
                 if error != 0:
                     errors += 1
 
                     # TODO: Apply perceptron update rule
-                    self.weights += None
-                    self.bias += None
+                    self.weights += self.learning_rate*error*X[i]
+                    self.bias += self.learning_rate*error
 
             self.training_errors.append(errors)
 
@@ -820,7 +817,7 @@ class SimplePerceptron:
             y: ndarray of predicted labels of shape (n,)
         '''
         # TODO
-        raise NotImplementedError
+        return self._activation_function(X@self.weights.T+self.bias)
 
     def get_decision_boundary_params(self) -> dict[str, Any] | None:
         '''
@@ -892,8 +889,9 @@ def create_nonlinear_features(X: ndarray) -> ndarray:
     Returns:
         X_enhanced: Augmented XOR dataset of shape (n, d+1)
     '''
-    # TODO
-    raise NotImplementedError
+    # DONE
+    X_enhanced = np.concatenate( (X, X[1]*X[2]), axis=1)
+    return X_enhanced
 
 
 def plot_xor_data(X: ndarray, y: ndarray) -> None:
