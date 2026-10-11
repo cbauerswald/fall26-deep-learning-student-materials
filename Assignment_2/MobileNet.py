@@ -97,7 +97,7 @@ class InvertedResidual(nn.Module):
         # TODO: If residual will be used, return the output of adding the provided input and
         # the output of passing the provided input through sequential.
         # Otherwise, return the output of passing the provided input through sequential.
-        if self.residuals_will_be_used:
+        if self.residual_will_be_used:
             return x + self.sequential(x)
         else:
             return self.sequential(x)
