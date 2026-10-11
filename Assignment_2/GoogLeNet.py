@@ -30,7 +30,7 @@ class InceptionBlock(nn.Module):
             nn.Conv2d(in_channels, ch3x3_reduce, bias=False, kernel_size=1),
             nn.BatchNorm2d(ch3x3_reduce),
             nn.ReLU(inplace=True),
-            nn.Conv2d(ch3x3_reduce, ch3x3, bias=False, kernel_size=3),
+            nn.Conv2d(ch3x3_reduce, ch3x3, bias=False, padding=1, kernel_size=3),
             nn.BatchNorm2d(ch3x3),
             nn.ReLU(inplace=True)
         )

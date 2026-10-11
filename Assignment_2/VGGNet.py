@@ -64,22 +64,22 @@ class VGGNet(nn.Module):
         # The output tensor of the first VGG block has shape
         # (number of images in batch, 128, floor(height of image / 2), floor(width of image) / 2)).
         layers.append(VGGBlock(in_channels=64, out_channels=128))
-        print("Tensor shape is: ", layers[-1].sequential(torch.randn(1, 64, 32, 32)).shape)
-        print("Expected shape is: ", (1, 128, 16, 16))
+        # print("Tensor shape is: ", layers[-1].sequential(torch.randn(1, 64, 32, 32)).shape)
+        # print("Expected shape is: ", (1, 128, 16, 16))
 
         # DONE: Add to the list of layers an object of type VGGBlock with 128 input channels and 256 output channels.
         # The output tensor of the second VGG block has shape
         # (number of images in batch, 256, floor(height of input tensor / 2), floor(width of input tensor / 2)).
         layers.append(VGGBlock(in_channels=128, out_channels=256))
-        print("Tensor shape is: ", layers[-1].sequential(torch.randn(1, 128, 16, 16)).shape)
-        print("Expected shape is: ", (1, 256, 8, 8))
+        # print("Tensor shape is: ", layers[-1].sequential(torch.randn(1, 128, 16, 16)).shape)
+        # print("Expected shape is: ", (1, 256, 8, 8))
 
         # DONE: Add layers to an object of type Sequential.
         # Assign that object to an instance attribute called sequential.
         self.sequential = nn.Sequential(*layers)
 
         # DONE: Assign to an instance attribute called `average_pooling` 2D average pooling with height of 1 and width of 1.
-        self.average_pooling = nn.AveragePool2d(kernel_size=1, stride=1)
+        self.average_pooling = nn.AdaptiveAvgPool2d((1, 1))
 
         # DONE: Assign to an instance attribute called `linear_transformation` a linear transformation
         # with 256 input features and a number of output features equal to the provided number of classes.
@@ -93,14 +93,14 @@ class VGGNet(nn.Module):
         # the output of passing the provided input to the object of type sequential of this instance.
         # The output tensor has shape (number of images in batch, 256, floor(height of image / 4), floor(width of image / 4)).
         intermediate = self.sequential(x)
-        print("Tensor shape is: ", intermediate.shape)
-        print("Expected shape is: ", (x.shape[0], 256, x.shape[2] // 4, x.shape[3] // 4))
+        # print("Tensor shape is: ", intermediate.shape)
+        # print("Expected shape is: ", (x.shape[0], 256, x.shape[2] // 4, x.shape[3] // 4))
 
         # DONE: Assign to intermediate to output of passing intermediate to the average pooling of this instance.
         # The output tensor of average pooling has shape (number of images in batch, 256, 1, 1).
         intermediate = self.average_pooling(intermediate)
-        print("Tensor shape is: ", intermediate.shape)
-        print("Expected shape is: ", (x.shape[0], 256, 1, 1))
+        # print("Tensor shape is: ", intermediate.shape)
+        # print("Expected shape is: ", (x.shape[0], 256, 1, 1))
 
         # DONE: Flatten intermediate from start dimension 1 on.
         # The output tensor of flattening has shape (number of images in batch, 256).

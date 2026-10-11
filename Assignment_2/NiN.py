@@ -79,7 +79,7 @@ class NiN(nn.Module):
 
 
         # DONE: Add to the list of layers 2D average pooling with height of 1 and width of 1.
-        layers.append(nn.AvgPool2d(kernel_size=1, stride=1))
+        layers.append(nn.AdaptiveAvgPool2d((1, 1)))
 
         # DONE: Add layers to an object of type Sequential.
         # Assign that object to an instance attribute called sequential.
