@@ -8,7 +8,7 @@ class DecoderGRU(nn.Module):
         self.output_dim = output_dim
 
         # TODO: Assign to instance attribute embedding an embedding with the provided output dimension and embedding dimension.
-        raise NotImplementedError
+        self.embedding = nn.Embedding(output_dim, embed_dim)
 
         # TODO: Assign to an instance attribute called GRU a Gated Recurrent Unit with an input size equal to the provided embedding dimension,
         # a hidden size equal to the provided hidden dimension, a number of layers equal to the provided number of layers,
