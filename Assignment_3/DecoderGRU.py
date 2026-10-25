@@ -40,7 +40,6 @@ class DecoderGRU(nn.Module):
 
         # TODO: Remove the sequence dimension from the tensor of output features.
         tensor_of_output_features = tensor_of_output_features.squeeze(1)
-        print(tensor_of_output_features.shape)
 
         # TODO: Assign to a local variable called `tensor_of_logits` the output of passing the tensor of output features to the linear layer.
         tensor_of_logits = self.linear_layer(tensor_of_output_features)

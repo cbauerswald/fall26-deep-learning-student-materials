@@ -19,8 +19,6 @@ def evaluate(model, iterator, criterion):
 
             # TODO: Assign to local variable loss the output of passing the tensor of logits for many tokens and the target
             # to the provided criterion.
-            tensor_of_logits_for_many_tokens = tensor_of_logits_for_many_tokens.reshape(-1, number_of_tokens_in_vocabulary)
-            tgt = tgt.reshape(-1)
             loss = criterion(tensor_of_logits_for_many_tokens, tgt)
 
             epoch_loss += loss.item()
