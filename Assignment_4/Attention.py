@@ -43,7 +43,7 @@ class Attention(nn.Module):
 
         # TODO: Assign to local variable `context_matrix` the output of converting the context tensor
         # from (batch size, 1, number of hidden states) to (batch size, number of hidden states).
-        context_matrix = context_tensor.unsqueeze(1)
+        context_matrix = context_tensor.squeeze(1)
 
         # TODO: Return the context matrix and matrix of attention weights.
         return context_matrix, matrix_of_attention_weights

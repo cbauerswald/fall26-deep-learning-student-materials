@@ -33,7 +33,7 @@ class EncoderGRU(nn.Module):
         # Specify the list of sequence lengths of each batch element as the provided lengths moved to CPU.
         # Specify that the input tensor is organized by batch in its first dimension.
         # Do not enforce sorting.
-        packed_sequence = pack_padded_sequence(tensor_of_embedded_sequences, src_lengths.cpu(), enforce_sorted=False)
+        packed_sequence = pack_padded_sequence(tensor_of_embedded_sequences, src_lengths.cpu(),batch_first=True, enforce_sorted=False)
         
         # DONE: Assign to local variables `packed_sequence_of_output_features` and `tensor_with_final_hidden_states` the output of passing `packed_sequence` to the GRU.
         packed_sequence_of_output_features, tensor_with_final_hidden_states = self.GRU(packed_sequence)
