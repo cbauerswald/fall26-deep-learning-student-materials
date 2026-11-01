@@ -17,23 +17,23 @@ class Seq2Seq(nn.Module):
         tgt_vocab_size = self.decoder.output_dim
         tensor_of_logits_for_many_tokens = torch.zeros(batch_size, tgt_len, tgt_vocab_size).to(self.device)
 
-        # TODO: Assign to local variables `sequence_of_output_features` and `tensor_with_final_hidden_states`
+        # DONE: Assign to local variables `sequence_of_output_features` and `tensor_with_final_hidden_states`
         # the output of passing the provided source and the provided list of lengths to the encoder.
-        raise NotImplementedError
+        sequence_of_output_features, tensor_with_final_hidden_states = self.encoder(src, src_lengths)
 
         SOS_IDX = 1
         input = torch.full((batch_size,), SOS_IDX, dtype=torch.long, device=self.device)
         for t in range(0, tgt_len):
 
-            # TODO: Assign to local variables `tensor_of_logits`, `tensor_with_final_hidden_states`, and a placeholder
+            # DONE: Assign to local variables `tensor_of_logits`, `tensor_with_final_hidden_states`, and a placeholder
             # the output passing the input, tensor with final hidden states, sequence of output features, and source mask to the decoder.
-            raise NotImplementedError
+            tensor_of_logits, tensor_with_final_hidden_states, _ = self.decoder(input, tensor_with_final_hidden_states, sequence_of_output_features, src_mask=None)
 
             tensor_of_logits_for_many_tokens[:, t, :] = tensor_of_logits
             teacher_force = random.random() < teacher_forcing_ratio
             top1 = tensor_of_logits.argmax(1)
-            # TODO: If teacher forcing is used, redefine input as a tensor of all target token indices at position t.
+            # DONE: If teacher forcing is used, redefine input as a tensor of all target token indices at position t.
             # Otherwise, redefine input as the predicted token index.
-            raise NotImplementedError
+            input = tgt[:,t] if teacher_force else top1
 
         return tensor_of_logits_for_many_tokens
