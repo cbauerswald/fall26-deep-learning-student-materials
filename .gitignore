@@ -1,1 +1,6 @@
 __pycache__
+__MACOSX/
+.ipynb_checkpoints/
+.vscode/
+Assignment_2/dataset/
+*.png
