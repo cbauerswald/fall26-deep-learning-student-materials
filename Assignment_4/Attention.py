@@ -6,7 +6,7 @@ class Attention(nn.Module):
 
     def forward(self, decoder_hidden, encoder_outputs, src_mask = None):
 
-        # TODO: Assign to local variable `tensor_of_current_decoder_hidden_states`
+        # DONE: Assign to local variable `tensor_of_current_decoder_hidden_states`
         # the output of converting the provided tensor of current decoder hidden states
         # from (batch size, number of hidden states) to (batch size, number of hidden states, 1).
         tensor_of_current_decoder_hidden_states = decoder_hidden.unsqueeze(2)
@@ -32,18 +32,18 @@ class Attention(nn.Module):
         # Compute softmax along dimension 1.
         matrix_of_attention_weights = F.softmax(matrix_of_alignment_scores, dim=1)
 
-        # TODO: Assign to local variable `tensor_of_attention_weights`
+        # DONE: Assign to local variable `tensor_of_attention_weights`
         # the output of converting the provided matrix of attention weights
         # from (batch size, number of time steps) to (batch size, 1, number of time steps).
         tensor_of_attention_weights = matrix_of_attention_weights.unsqueeze(1)
 
-        # TODO: Assign to local variable `context_tensor` the output of batch matrix multiplying
+        # DONE: Assign to local variable `context_tensor` the output of batch matrix multiplying
         # the tensor of attention weights and the tensor of encoder hidden states.
         context_tensor = tensor_of_attention_weights.bmm(encoder_outputs)
 
-        # TODO: Assign to local variable `context_matrix` the output of converting the context tensor
+        # DONE: Assign to local variable `context_matrix` the output of converting the context tensor
         # from (batch size, 1, number of hidden states) to (batch size, number of hidden states).
         context_matrix = context_tensor.squeeze(1)
 
-        # TODO: Return the context matrix and matrix of attention weights.
+        # DONE: Return the context matrix and matrix of attention weights.
         return context_matrix, matrix_of_attention_weights

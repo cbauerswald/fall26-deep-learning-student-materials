@@ -1,4 +1,4 @@
 metric,network without attention, network with attention
-validation loss,2.7644,2.7937
-validation token accuracy,.5369,.5064
-validation BLEU,22.17,17.41
+validation loss,2.764,2.794
+validation token accuracy,.537,.506
+validation BLEU,.222,.174
