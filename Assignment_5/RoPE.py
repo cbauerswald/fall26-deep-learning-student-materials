@@ -30,32 +30,38 @@ class RoPE(nn.Module):
 
         # TODO: Assign to local variable `tensor_of_indices` a 1D tensor with values from the interval [0, provided dimension)
         # taken with common difference 2 beginning from 0.
-        raise NotImplementedError
+        dist =2
+        start = 0
+        end = dim
+        tensor_of_indices = torch.arange(start, end, dist)
 
         # TODO: Reassign to the tensor of indices the tensor of floating point representations of the indices.
-        raise NotImplementedError
+        tensor_of_indices = tensor_of_indices.float()
 
         # TODO: Assign to local variable `normalized_tensor_of_indices`
         # the quotient of the tensor of indices and the provided dimension.
-        raise NotImplementedError
+        normalized_tensor_of_indices = tensor_of_indices / dim
 
         # TODO: Assign to local variable `tensor_of_exponents` the provided base raised to the normalized tensor of indices.
-        raise NotImplementedError
+        tensor_of_expontents = base ** normalized_tensor_of_indices
 
         # TODO: Assign to local variable `tensor_of_inverse_frequencies` the reciprocal of the tensor of exponents.
-        raise NotImplementedError
+        tensor_of_inverse_frequensies = 1 / tensor_of_expontents
 
         # TODO: Assign to local variable `tensor_of_positions`
         # a 1D tensor with values from the interval [0, provided maximum sequence length)
         # taken with common difference 1 beginning from 0.
-        raise NotImplementedError
+        dist = 1
+        start = 0
+        end = max_seq_len
+        tensor_of_positions = torch.arange(start, end, dist)
 
         # TODO: Reassign to the tensor of positions the tensor of floating point representations of the positions.
-        raise NotImplementedError
+        tensor_of_positions = tensor_of_positions.float()
 
         # TODO: Assign to local variable `tensor_of_frequencies` the outer product of the tensor of positions and
         # the tensor of inverse frequencies.
-        raise NotImplementedError
+        tensor_of_frequencies = torch.outer(tensor_of_positions, tensor_of_inverse_frequensies)
 
         # Register the tensor of frequencies as a buffer of this instance called `tensor_of_frequencies`.
         self.register_buffer("tensor_of_frequencies", tensor_of_frequencies)
@@ -76,10 +82,10 @@ class RoPE(nn.Module):
         tensor_of_frequencies = buffer[:seq_len] # (seq_len, dim/2)
 
         # TODO: Assign to local variable `tensor_of_cosines` a tensor of the cosines of the frequencies.
-        raise NotImplementedError
+        tensor_of_cosines = torch.cos(tensor_of_frequencies)
 
         # TODO: Assign to local variable `tensor_of_sines` a tensor of the sines of the frequencies.
-        raise NotImplementedError
+        tensor_of_sines = torch.sin(tensor_of_frequencies)
 
         # Reshape x into pairs: (batch, seq_len, dim/2, 2)
         x_reshaped = x.reshape(batch, seq_len, -1, 2)
@@ -91,12 +97,12 @@ class RoPE(nn.Module):
         # TODO: Assign to local variable `tensor_of_rotated_inputs_with_even_indices`
         # the difference of the product of the tensor of inputs with even indices and the tensor of cosines and
         # the product of the tensor of inputs with odd indices and the tensor of sines. 
-        raise NotImplementedError
+        tensor_of_rotated_inputs_with_even_indices = tensor_of_inputs_with_even_indices * tensor_of_cosines - tensor_of_inputs_with_odd_indices * tensor_of_sines
 
         # TODO: Assign to local variable `tensor_of_rotated_inputs_with_odd_indices`
         # the sum of the product of the tensor of inputs with even indices and the tensor of sines and
         # the product of the tensor of inputs with odd indices and the tensor of cosines. 
-        raise NotImplementedError
+        tensor_of_rotated_inputs_with_odd_indices = tensor_of_inputs_with_even_indices * tensor_of_sines + tensor_of_inputs_with_odd_indices * tensor_of_cosines
 
         # Stack back together
         tensor_of_rotated_inputs = torch.stack([tensor_of_rotated_inputs_with_even_indices, tensor_of_rotated_inputs_with_odd_indices], dim = -1)
